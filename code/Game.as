@@ -15,6 +15,10 @@
 		private function gameLoop(e: Event): void {
 			Time.update();
 			player.update();
+			
+			
+			
+			KeyboardInput.update(); // should be the last thing called within the gameLoop
 		} //end gameLoop
 	} // end Class
 } //end Package

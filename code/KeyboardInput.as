@@ -7,26 +7,9 @@
 	 */
 	public class KeyboardInput {
 
-		/** publicly accessable var for if the left arrow key is pressed */
-		static public var keyLeft: Boolean = false;
-		/** publicly accessable var for if the up arrow key is pressed */
-		static public var keyUp: Boolean = false;
-		/** publicly accessable var for if the right arrow key is pressed */
-		static public var keyRight: Boolean = false;
-		/** publicly accessable var for if the down arrow key is pressed */
-		static public var keyDown: Boolean = false;
-		/** publicly accessable var for if the enter key is pressed */
-		static public var keyEnter: Boolean = false;
-		/** publicly accessable var for if the w key is pressed */
-		static public var keyW: Boolean = false;
-		/** publicly accessable var for if the a key is pressed */
-		static public var keyA: Boolean = false;
-		/** publicly accessable var for if the s key is pressed */
-		static public var keyS: Boolean = false;
-		/** publicly accessable var for if the d key is pressed */
-		static public var keyD: Boolean = false;
-		/** publicly accessable var for if the space key is pressed */
-		static public var keySpace: Boolean = false;
+		static public var keyState:Array = new Array();
+		static public var keyPrevState:Array = new Array();
+		
 
 		/**
 		 * This function sets up the event listeners to know when each of the keys are being pressed
@@ -37,6 +20,13 @@
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 		} // end setup
+		
+		/**
+		* this function's job is to cashe all of the key values, for the NEXT frame. 
+		*/
+		static public function update(): void {
+			keyPrevState = keyState.slice(); // in this context, slice() gives us a copy of the array
+		}
 
 		/**
 		 * This function is called when a key is pressed
@@ -45,17 +35,8 @@
 		 * @param: isDown in a boolean that sets wether the key is pressed down or not.
 		 */
 		static private function updateKey(keyCode: int, isDown: Boolean): void {
-			if (keyCode == 13) keyEnter = isDown;
-			if (keyCode == 37) keyLeft = isDown;
-			if (keyCode == 38) keyUp = isDown;
-			if (keyCode == 39) keyRight = isDown;
-			if (keyCode == 40) keyDown = isDown;
-			if (keyCode == 87) keyW = isDown;
-			if (keyCode == 65) keyA = isDown;
-			if (keyCode == 83) keyS = isDown;
-			if (keyCode == 68) keyD = isDown;
-			if (keyCode == 32) keySpace = isDown;
-		} // end updateKey
+				keyState[keyCode] = isDown;
+			} // end updateKey
 
 		/**
 		 * This function is called when a key is pressed on the keyboard
@@ -75,5 +56,17 @@
 		static private function handleKeyUp(e: KeyboardEvent): void {
 			updateKey(e.keyCode, false);
 		} // end handleKeyUp
+		
+		static public function isKeyDown(keyCode:int):Boolean {
+			if (keyCode < 0) return false;
+			if (keyCode >= keyState.length) return false;
+			return keyState[keyCode];
+		}// end isKeyDown
+		
+		static public function onKeyDown(keyCode:int):Boolean {
+			if (keyCode < 0) return false;
+			if (keyCode >= keyState.length) return false;
+			return (keyState[keyCode] && !keyPrevState[keyCode]);
+		}// end onKeyDown
 	} // end Class
 } // end Package
