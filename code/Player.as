@@ -4,7 +4,7 @@
 	import flash.geom.Point;
 	import flash.ui.Keyboard;
 	import flash.events.MouseEvent;
-		import flash.display.Stage;
+	import flash.display.Stage;
 
 	public class Player extends MovieClip {
 
@@ -14,6 +14,7 @@
 		private var maxSpeed: Number = 250; //pixals per second
 		private var jumpTimer: Number = 0;
 		private var canDoubleJump: Boolean = false;
+		private var ground: Number;
 		private const HORIZONTAL_ACCELERATION: Number = 800;
 		private const HORIZONTAL_DECELERATION: Number = 800;
 
@@ -26,17 +27,21 @@
 		public function update(): void {
 
 			if (KeyboardInput.onKeyDown(Keyboard.SPACE)) {
-				trace("jump");
+				//trace("jump");
 				//jumpTimer = 0;
 			}
-			if (KeyboardInput.isKeyDown(Keyboard.SPACE)){
-				jumpTimer++ * Time.dt ;
-				trace(jumpTimer);
+			if (KeyboardInput.isKeyDown(Keyboard.SPACE)) {
+				jumpTimer++;
+				//trace(jumpTimer);
+			}
+			if (KeyboardInput.onKeyUp(Keyboard.SPACE)) {
+				//trace("New Jump");
+				playerJump();
+				jumpTimer = 0;
 			}
 
 
-
-			handleHorzMovement()
+			handleHorzMovement();
 			doPhysics();
 			detectGround();
 		} // end update
@@ -65,7 +70,7 @@
 		} // end handleHorzMovement
 		private function detectGround(): void {
 			// look at y position
-			var ground: Number = 350
+			ground = 350
 			if (y > ground) {
 				y = ground; // clamp
 				velocity.y = 0;
@@ -94,6 +99,11 @@
 		public function handleMouseDown(e: MouseEvent): void {
 			jumpTimer++;
 			trace(jumpTimer);
+		}
+
+		private function playerJump(): void {
+			trace ("jump");
+			y += velocity.y - jumpTimer * Time.dt;
 		}
 
 	} //end Class
