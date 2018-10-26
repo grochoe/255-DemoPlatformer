@@ -27,7 +27,11 @@
 
 			if (KeyboardInput.onKeyDown(Keyboard.SPACE)) {
 				trace("jump");
-				jumpTimer = 0;
+				//jumpTimer = 0;
+			}
+			if (KeyboardInput.isKeyDown(Keyboard.SPACE)){
+				jumpTimer++ * Time.dt ;
+				trace(jumpTimer);
 			}
 
 
