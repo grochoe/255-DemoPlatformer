@@ -6,8 +6,9 @@
 	 * This static Class holds all of the keyboard input information that will be used though the entirity of the game
 	 */
 	public class KeyboardInput {
-
+		/** This array will keep track of each keyCode*/
 		static public var keyState: Array = new Array();
+		/** this array will keep track of the previous state of the pushed button */
 		static public var keyPrevState: Array = new Array();
 
 
@@ -55,23 +56,34 @@
 		 * @param:e is a keyboard event that will be used in the updateKey function.
 		 * It also will set isDown as false;
 		 */
-		
 		static private function handleKeyUp(e: KeyboardEvent): void {
 			updateKey(e.keyCode, false);
 		} // end handleKeyUp
 		
+		/**
+		 * This function lets the array know if a key is being held down
+		 * @param:e is a keyboard event that will be used in the updateKey function.
+		 */
 		static public function isKeyDown(keyCode: int): Boolean {
 			if (keyCode < 0) return false;
 			if (keyCode >= keyState.length) return false;
 			return keyState[keyCode];
 		} // end isKeyDown
 		
+				/**
+		 * This function lets the array know when the key is released
+		 * @param:e is a keyboard event that will be used in the updateKey function.
+		 */
 		static public function onKeyUp(keyCode: int): Boolean {
 			if (keyCode < 0) return false;
 			if (keyCode >= keyState.length) return false;
 			return (!keyState[keyCode] && keyPrevState[keyCode]);
-		}
+		}// end onKeyUp
 
+		/**
+		 * This function is called when a key is pressed on the keyboard
+		 * @param:e is a keyboard event that will be used in the updateKey function.
+		 */
 		static public function onKeyDown(keyCode: int): Boolean {
 			if (keyCode < 0) return false;
 			if (keyCode >= keyState.length) return false;
