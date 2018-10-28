@@ -29,20 +29,26 @@
 			if (KeyboardInput.onKeyDown(Keyboard.SPACE)) {
 				//trace("jump");
 				//jumpTimer = 0;
-			}
+			}// end if
 			if (KeyboardInput.isKeyDown(Keyboard.SPACE)) {
-				if (jumpTimer < 50){
-				jumpTimer++;
-				}
-				//trace(jumpTimer);
-			}
+				if (jumpTimer < 100) {
+					jumpTimer += Time.dt * 200;
+				}// end if
+			}// end if
+			//trace(jumpTimer);
+
 			if (KeyboardInput.onKeyUp(Keyboard.SPACE)) {
 				//trace("New Jump");
-				playerJump();
-				jumpTimer = 0;
-			}
-
-
+				if (y == ground) {
+					canDoubleJump = true;
+					playerJump();
+					jumpTimer = 0;
+				} else if (y != ground && canDoubleJump) {
+					canDoubleJump = false;
+					playerJump();
+					jumpTimer = 0;
+				}// end if
+			}// end if
 			handleHorzMovement();
 			doPhysics();
 			detectGround();
@@ -104,7 +110,7 @@
 		}
 
 		private function playerJump(): void {
-			trace ("jump");
+			trace("jump");
 			y -= jumpTimer;
 		}
 
