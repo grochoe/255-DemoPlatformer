@@ -13,7 +13,7 @@
 		private var gravity: Point = new Point(0, 100);
 		private var maxSpeed: Number = 250; //pixals per second
 		private var jumpTimer: Number = 0;
-		private var canDoubleJump: Boolean = false;
+		private var canDoubleJump: Boolean = true;
 		private var ground: Number;
 		private const HORIZONTAL_ACCELERATION: Number = 800;
 		private const HORIZONTAL_DECELERATION: Number = 800;
@@ -31,7 +31,9 @@
 				//jumpTimer = 0;
 			}
 			if (KeyboardInput.isKeyDown(Keyboard.SPACE)) {
+				if (jumpTimer < 50){
 				jumpTimer++;
+				}
 				//trace(jumpTimer);
 			}
 			if (KeyboardInput.onKeyUp(Keyboard.SPACE)) {
@@ -103,7 +105,7 @@
 
 		private function playerJump(): void {
 			trace ("jump");
-			y += velocity.y - jumpTimer * Time.dt;
+			y -= jumpTimer;
 		}
 
 	} //end Class
