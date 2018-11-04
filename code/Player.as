@@ -22,25 +22,24 @@
 		private var canDoubleJump: Boolean = false;
 		/** this represents the ground plane, how far the player can move down in the y axis*/
 		private var ground: Number;
-
+		/** determins wheather the player is on a ground plane/platform*/
 		private var isGrounded = false;
-
+		/** is the player in the air, not on a platform*/
 		private var isJumping = false;
-
+		/** number of times left the player can jump while in the air */
 		private var airJumpsLeft: int = 1;
-
+		/** number of times the player can jump while in the air */
 		private var airJumpsMax: int = 1;
-
+		/** the velocity the player has when jumping*/
 		private var jumpVelocity: Number = 400;
-
-
+		/** used for collision detection with platforms*/
+		public var collider: AABB;
 
 		/** this is how fast the player can accelerate */
 		private const HORIZONTAL_ACCELERATION: Number = 800;
 		/**  this is how the player decelerates*/
 		private const HORIZONTAL_DECELERATION: Number = 800;
 
-		public var collider: AABB;
 
 		/**
 		 * this function is the initial set up for Player
@@ -54,11 +53,11 @@
 		 * this function updates each function within the player
 		 */
 		public function update(): void {
-			
+
 			handleJump();
 			handleHorzMovement();
 			doPhysics();
-			
+
 			collider.calcEdges(x, y);
 			isGrounded = false; // the allows us to walk off the edge and not longer be "grounded"
 		} // end update
@@ -130,6 +129,10 @@
 			if (velocity.y > 0) isJumping = false;
 		} // end checkJump
 
+		/**
+		 * this function fixes the players position when colling with another platform object
+		 * and stops its velocity in that direction
+		 */
 		public function applyFix(fix: Point): void {
 			if (fix.x != 0) {
 				x += fix.x;
@@ -139,11 +142,11 @@
 				y += fix.y;
 				velocity.y = 0;
 			}
-			if (fix.y <0){ //we movedd the player UP, so they are on the ground
-					isGrounded = true;
+			if (fix.y < 0) { //we movedd the player UP, so they are on the ground
+				isGrounded = true;
 				airJumpsLeft = airJumpsMax;
 			}
-			collider.calcEdges(x,y);
+			collider.calcEdges(x, y);
 		}
 	} //end Class
 } // end Package

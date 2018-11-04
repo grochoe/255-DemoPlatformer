@@ -9,6 +9,7 @@
 	 */
 	public class Game extends MovieClip {
 
+		/** this is the array that holds all of the platform pieces	*/
 		static public var platforms: Array = new Array;
 
 		/**
@@ -43,11 +44,8 @@
 					//apply the fix:
 					player.applyFix(fix);
 
-				}//end if
-
-
-			}// end for
-
-		}// end doCollisionoDetection
+				} //end if
+			} // end for
+		} // end doCollisionoDetection
 	} // end Class
 } //end Package

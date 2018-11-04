@@ -45,12 +45,12 @@
 		 * @param:e is a keyboard event that will be used in the updateKey function.
 		 * It also will set isDown as true;
 		 */
-		
+
 		static private function handleKeyDown(e: KeyboardEvent): void {
 			//trace(e.keyCode);
 			updateKey(e.keyCode, true);
 		} // end handleKeyDown
-		
+
 		/**
 		 * This function is called when a key is pressed on the keyboard
 		 * @param:e is a keyboard event that will be used in the updateKey function.
@@ -59,7 +59,7 @@
 		static private function handleKeyUp(e: KeyboardEvent): void {
 			updateKey(e.keyCode, false);
 		} // end handleKeyUp
-		
+
 		/**
 		 * This function lets the array know if a key is being held down
 		 * @param:e is a keyboard event that will be used in the updateKey function.
@@ -69,8 +69,8 @@
 			if (keyCode >= keyState.length) return false;
 			return keyState[keyCode];
 		} // end isKeyDown
-		
-				/**
+
+		/**
 		 * This function lets the array know when the key is released
 		 * @param:e is a keyboard event that will be used in the updateKey function.
 		 */
@@ -78,7 +78,7 @@
 			if (keyCode < 0) return false;
 			if (keyCode >= keyState.length) return false;
 			return (!keyState[keyCode] && keyPrevState[keyCode]);
-		}// end onKeyUp
+		} // end onKeyUp
 
 		/**
 		 * This function is called when a key is pressed on the keyboard
