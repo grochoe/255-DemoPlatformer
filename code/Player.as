@@ -13,7 +13,7 @@
 		/** this will be used to move the player and effect the velocity of the player*/
 		private var velocity: Point = new Point(1, 5);
 		/** this will be what forces the player down and adds gravity to the platform*/
-		private var gravity: Point = new Point(0, 100);
+		private var gravity: Point = new Point(0, 750);
 		/** this is the fastest that the player will be able to move the left and right*/
 		private var maxSpeed: Number = 250; //pixals per second
 		/** this will track how long the space bar has been held*/
@@ -22,6 +22,19 @@
 		private var canDoubleJump: Boolean = false;
 		/** this represents the ground plane, how far the player can move down in the y axis*/
 		private var ground: Number;
+
+		private var isGrounded = false;
+
+		private var isJumping = false;
+
+		private var airJumpsLeft: int = 1;
+
+		private var airJumpsMax: int = 1;
+
+		private var jumpVelocity: Number = 400;
+
+
+
 		/** this is how fast the player can accelerate */
 		private const HORIZONTAL_ACCELERATION: Number = 800;
 		/**  this is how the player decelerates*/
@@ -33,7 +46,7 @@
 		 * this function is the initial set up for Player
 		 */
 		public function Player() {
-			collider = new AABB(width/2, height/2);
+			collider = new AABB(width / 2, height / 2);
 
 		} // end Player
 
@@ -41,12 +54,12 @@
 		 * this function updates each function within the player
 		 */
 		public function update(): void {
-			checkJump();
+			handleJump();
 			handleHorzMovement();
 			doPhysics();
 			detectGround();
-			
-			collider.calcEdges(x,y);
+
+			collider.calcEdges(x, y);
 		} // end update
 
 		/**
@@ -79,6 +92,8 @@
 			// look at y position
 			ground = 350
 			if (y > ground) {
+				isGrounded = true;
+				airJumpsLeft = airJumpsMax;
 				y = ground; // clamp
 				velocity.y = 0;
 			} // end if
@@ -88,9 +103,13 @@
 		 * this function moves the player and applies gravity to the player within the y axis
 		 */
 		private function doPhysics(): void {
+			
+			var gravityMultiplier:Number = 1;
+			if (!isJumping) gravityMultiplier=2;
+			
 			// apply gravity to velocity:
-			velocity.x += gravity.x * Time.dt;
-			velocity.y += gravity.y * Time.dt;
+			//velocity.x += gravity.x * Time.dt;
+			velocity.y += gravity.y * Time.dt * gravityMultiplier;
 
 			//clamp to max speed
 			if (velocity.x > maxSpeed) velocity.x = maxSpeed;
@@ -103,41 +122,28 @@
 
 
 
-		/**
-		 * this function makes the player jump up in the y axis
-		 */
-		private function playerJump(): void {
-			trace("jump");
-			y -= jumpTimer;
-		}
+
 
 		/**
 		 * this function checks if the player is able to jump when the space key is pushed
 		 */
-		private function checkJump(): void {
+		private function handleJump(): void {
 			if (KeyboardInput.onKeyDown(Keyboard.SPACE)) {
-				//trace("jump");
-				//jumpTimer = 0;
-			} // end if
-			if (KeyboardInput.isKeyDown(Keyboard.SPACE)) {
-				if (jumpTimer < 100) {
-					jumpTimer += Time.dt * 200;
-				} // end if
-			} // end if
-			//trace(jumpTimer);
+				if (isGrounded) {
+					velocity.y = -jumpVelocity; //apply an impulse up
+					isGrounded = false;
+					isJumping = true;
+				} else {
+					if (airJumpsLeft > 0) {
+							velocity.y = -jumpVelocity;
+							airJumpsLeft--;
+							isJumping = true;
+						} //end if
+					} //end else
+				} //end if
 
-			if (KeyboardInput.onKeyUp(Keyboard.SPACE)) {
-				//trace("New Jump");
-				if (y == ground) {
-					canDoubleJump = true;
-					playerJump();
-					jumpTimer = 0;
-				} else if (y != ground && canDoubleJump) {
-					canDoubleJump = false;
-					playerJump();
-					jumpTimer = 0;
-				} // end if
-			} // end if
-		} // end checkJump
-	} //end Class
-} // end Package
+				if (!KeyboardInput.isKeyDown(Keyboard.SPACE)) isJumping = false;
+				if (velocity.y > 0) isJumping = false;
+			} // end checkJump
+		} //end Class
+	} // end Package
