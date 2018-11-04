@@ -54,12 +54,13 @@
 		 * this function updates each function within the player
 		 */
 		public function update(): void {
+			
 			handleJump();
 			handleHorzMovement();
 			doPhysics();
-			detectGround();
-
+			
 			collider.calcEdges(x, y);
+			isGrounded = false; // the allows us to walk off the edge and not longer be "grounded"
 		} // end update
 
 		/**
@@ -85,28 +86,15 @@
 
 		} // end handleHorzMovement
 
-		/**
-		 * this function compairs the ground with the player and makes sure the player never goes beyond the ground plane
-		 */
-		private function detectGround(): void {
-			// look at y position
-			ground = 350
-			if (y > ground) {
-				isGrounded = true;
-				airJumpsLeft = airJumpsMax;
-				y = ground; // clamp
-				velocity.y = 0;
-			} // end if
-		} // end detectGround
 
 		/**
 		 * this function moves the player and applies gravity to the player within the y axis
 		 */
 		private function doPhysics(): void {
-			
-			var gravityMultiplier:Number = 1;
-			if (!isJumping) gravityMultiplier=2;
-			
+
+			var gravityMultiplier: Number = 1;
+			if (!isJumping) gravityMultiplier = 2;
+
 			// apply gravity to velocity:
 			//velocity.x += gravity.x * Time.dt;
 			velocity.y += gravity.y * Time.dt * gravityMultiplier;
@@ -120,10 +108,6 @@
 			y += velocity.y * Time.dt;
 		} // end doPhysics
 
-
-
-
-
 		/**
 		 * this function checks if the player is able to jump when the space key is pushed
 		 */
@@ -135,15 +119,31 @@
 					isJumping = true;
 				} else {
 					if (airJumpsLeft > 0) {
-							velocity.y = -jumpVelocity;
-							airJumpsLeft--;
-							isJumping = true;
-						} //end if
-					} //end else
-				} //end if
+						velocity.y = -jumpVelocity;
+						airJumpsLeft--;
+						isJumping = true;
+					} //end if
+				} //end else
+			} //end if
 
-				if (!KeyboardInput.isKeyDown(Keyboard.SPACE)) isJumping = false;
-				if (velocity.y > 0) isJumping = false;
-			} // end checkJump
-		} //end Class
-	} // end Package
+			if (!KeyboardInput.isKeyDown(Keyboard.SPACE)) isJumping = false;
+			if (velocity.y > 0) isJumping = false;
+		} // end checkJump
+
+		public function applyFix(fix: Point): void {
+			if (fix.x != 0) {
+				x += fix.x;
+				velocity.x = 0;
+			}
+			if (fix.y != 0) {
+				y += fix.y;
+				velocity.y = 0;
+			}
+			if (fix.y <0){ //we movedd the player UP, so they are on the ground
+					isGrounded = true;
+				airJumpsLeft = airJumpsMax;
+			}
+			collider.calcEdges(x,y);
+		}
+	} //end Class
+} // end Package
