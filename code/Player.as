@@ -27,11 +27,13 @@
 		/**  this is how the player decelerates*/
 		private const HORIZONTAL_DECELERATION: Number = 800;
 
+		public var collider: AABB;
+
 		/**
 		 * this function is the initial set up for Player
 		 */
 		public function Player() {
-			// constructor code
+			collider = new AABB(width/2, height/2);
 
 		} // end Player
 
@@ -43,6 +45,8 @@
 			handleHorzMovement();
 			doPhysics();
 			detectGround();
+			
+			collider.calcEdges(x,y);
 		} // end update
 
 		/**

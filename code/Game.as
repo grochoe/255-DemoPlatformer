@@ -25,11 +25,19 @@
 			Time.update();
 			player.update();
 
+			doCollisionDetection();
 
 
 			KeyboardInput.update(); // should be the last thing called within the gameLoop
 		} //end gameLoop
 
+		private function doCollisionDetection(): void {
 
+			if (player.collider.checkOverlap(platform.collider)) {
+				platform.alpha = .5;
+			} else {
+				platform.alpha = 1;
+			}
+		}
 	} // end Class
 } //end Package
