@@ -1,4 +1,6 @@
 ﻿package code {
+	import flash.geom.Point;
+	import com.adobe.tvsdk.mediacore.events.PauseAtPeriodEnd;
 
 	public class AABB {
 
@@ -46,6 +48,30 @@
 			if(this.ymin > other.ymax)return false;// gap apbove
 			
 			return true;
+		}
+		
+		/**
+		* This function calculates how far to move THIS box so that it no longer intercects another AABB.
+		* @param other The other AABB.
+		* @return the "fix" vector - how far to move this box.
+		*/
+		public function findOverlapFix (other:AABB): Point {
+			
+			var moveL:Number = other.xmin - this.xmax;
+			var moveR:Number = other.xmin - this.xmin;
+			var moveU:Number = other.ymin - this.ymax;
+			var moveD:Number = other.ymax - this.ymin;
+			
+			var fix:Point = new Point();
+			
+			fix.x = (Math.abs(moveL) < Math.abs(moveR)) ? moveL: moveR;
+			fix.y = (Math.abs(moveU) < Math.abs(moveD)) ? moveU: moveD;
+			
+			if(Math.abs(fix.x)< Math.abs(fix.y)) fix.y = 0;
+			else fix.x = 0;
+			
+			return fix;
+			
 		}
 
 	}
